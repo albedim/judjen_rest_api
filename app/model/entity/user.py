@@ -14,12 +14,12 @@ class User(sql.Model):
     anonymous_name = sql.Column(sql.String(24), nullable=False)
     created_on = sql.Column(sql.Date, nullable=False)
 
-    def __init__(self, bio, email, password):
+    def __init__(self, bio, anonymousName, email, password):
         self.user_id = generateUuid(size=4)
         self.email = email
         self.bio = bio
         self.password = password
-        self.anonymous_name = "aaaaa"
+        self.anonymous_name = anonymousName
         self.created_on = datetime.datetime.utcnow()
 
     def toJSON(self, **kvargs):

@@ -40,7 +40,8 @@ class UserService:
                 raise UserNotFoundException()
             if user.password == hashString(request['password']):
                 return createSuccessResponse({
-                    'token': create_access_token(identity={'user_id': user.user_id, 'expires_in': 14}, expires_delta=timedelta(days=14))
+                    'token': create_access_token(identity={'user_id': user.user_id, 'expires_in': 14}, expires_delta=timedelta(days=14)),
+                    'expires_in': 14
                 })
             else:
                 raise UserNotFoundException()
@@ -78,11 +79,14 @@ class UserService:
 
             user = UserRepository.create(
                 request['email'],
+                request['anonymous_name'],
+                None if request['bio'] == "" else request['bio'],
                 hashString(request['password'])
             )
             return createSuccessResponse({
-                'token': create_access_token(identity={'user_id': user.user_id, 'expires_in': 14},
-                                             expires_delta=timedelta(days=14))
+                'token': create_access_token(identity={'user_id': user.user_id},
+                                             expires_delta=timedelta(days=14)),
+                'expires_in': 14
             })
 
         except UserAlreadyExistsException as exc:

@@ -12,8 +12,8 @@ from app.utils.utils import generateUuid
 class UserRepository(Repository):
 
     @classmethod
-    def create(cls, email, password):
-        user: User = User(email, password)
+    def create(cls, email, anonymousName, bio, password):
+        user: User = User(bio, anonymousName, email, password)
         sql.session.add(user)
         sql.session.commit()
         return user
