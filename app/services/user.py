@@ -92,7 +92,7 @@ class UserService:
                 hashString(request['password'])
             )
 
-            send_html_email(request['email'], getEmails("recover_password")['welcome'],
+            send_html_email(request['email'], getEmails("welcome")['title'],
                             WELCOME_EMAIL.replace("{anonymous_name}", user.anonymous_name)
                             .replace("{BASE_FE_URL}", BASE_FE_URL))
             return createSuccessResponse({

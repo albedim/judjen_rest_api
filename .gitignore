@@ -1,0 +1,4 @@
+# Ignore YAML and SQL files
+*.yaml
+*.yml
+*.sql

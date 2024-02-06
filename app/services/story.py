@@ -87,13 +87,15 @@ class StoryService(Repository):
                 reposted = RepostRepository.getRepost(user.user_id, story[0].story_id) is not None
                 favorited = FavoriteRepository.getFavorite(user.user_id, story[0].story_id) is not None
                 topics = StoryTagRepository.getTags(story[0].story_id)
-                own = userId == story[0].user_id
+                is_page_user_owner = userId == story[0].user_id
+                is_requesting_user_owner = user.user_id == story[0].user_id
                 resTopics = []
                 for topic in topics:
                     resTopics.append(topic.toJSON())
                 res.append(
                     story[0].toJSON(
-                        own=own,
+                        is_page_user_owner=is_page_user_owner,
+                        is_requesting_user_owner=is_requesting_user_owner,
                         topics=resTopics,
                         reposted=reposted,
                         favorited=favorited,
