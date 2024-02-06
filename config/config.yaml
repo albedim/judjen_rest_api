@@ -2,7 +2,13 @@
 datasources:
   - name: local
     user: root
-    password: "11025"
+    password: ""
+    host: localhost
+    port: 3306
+    db: judjen
+  - name: production
+    user: ""
+    password: ""
     host: localhost
     port: 3306
     db: judjen
@@ -14,5 +20,12 @@ variables:
   - name: production
     BASE_URL: https://videomail.pythonanywhere.com
     BASE_FE_URL: https://videomailfe.pages.dev
+
+
+emails:
+  - name: welcome
+    title: "Welcome to JudJen"
+  - name: recover_password
+    title: "Recover your password"
 
 

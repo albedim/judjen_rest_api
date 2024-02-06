@@ -10,6 +10,7 @@ class User(sql.Model):
     user_id = sql.Column(sql.String(4), primary_key=True)
     email = sql.Column(sql.String(64), nullable=False)
     bio = sql.Column(sql.String(80))
+    recovery_token = sql.Column(sql.String(16), nullable=True)
     password = sql.Column(sql.String(64), nullable=False)
     anonymous_name = sql.Column(sql.String(24), nullable=False)
     created_on = sql.Column(sql.Date, nullable=False)

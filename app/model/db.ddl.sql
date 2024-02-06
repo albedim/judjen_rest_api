@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS users(
 	user_id VARCHAR(4) PRIMARY KEY,
     email VARCHAR(64) NOT NULL,
     bio VARCHAR(80),
+    recovery_token VARCHAR(16),
     password VARCHAR(64) NOT NULL,
     anonymous_name VARCHAR(24) NOT NULL,
     created_on DATE NOT NULL

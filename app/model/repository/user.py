@@ -70,3 +70,27 @@ class UserRepository(Repository):
             .all()
         )
         return users
+
+    @classmethod
+    def change(cls, user, bio, password):
+        user.bio = bio
+        user.password = password
+        sql.session.commit()
+
+    @classmethod
+    def createRecoveryToken(cls, user):
+        recoveryToken = generateUuid(size=18).replace("-", "")
+        user.recovery_token = recoveryToken
+        sql.session.commit()
+        return recoveryToken
+
+    @classmethod
+    def getUserByRecoveryToken(cls, recoveryToken):
+        user = sql.session.query(User).filter(User.recovery_token == recoveryToken).first()
+        return user
+
+    @classmethod
+    def createPassword(cls, user, password):
+        user.password = password
+        user.recovery_token = None
+        sql.session.commit()

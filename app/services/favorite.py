@@ -8,27 +8,36 @@ from app.model.repository.favorite import FavoriteRepository
 from app.model.repository.repo import Repository
 from app.model.repository.story import StoryRepository
 from app.model.repository.user import UserRepository
+from app.utils.errors.GException import GException
+from app.utils.errors.StoryNotFoundException import StoryNotFoundException
 from app.utils.errors.UnAuthotizedException import UnAuthorizedException
-from app.utils.utils import createSuccessResponse
+from app.utils.utils import createSuccessResponse, createErrorResponse
 
 
 class FavoriteService(Repository):
 
     @classmethod
     def create(cls, auth, request):
-        userId = auth['user_id']
-        user = UserRepository.getUserById(userId)
+        try:
+            userId = auth['user_id']
+            user = UserRepository.getUserById(userId)
 
-        if user is None:
-            raise UnAuthorizedException()
+            if user is None:
+                raise UnAuthorizedException()
 
-        story = StoryRepository.getStory(request['story_id'])
-        if story is None:
-            raise UnAuthorizedException()
+            story = StoryRepository.getStory(request['story_id'])
+            if story is None:
+                raise StoryNotFoundException()
 
-        repost = FavoriteRepository.getFavorite(user.user_id, story.story_id)
-        if repost is None:
-            FavoriteRepository.create(user.user_id, story.story_id)
-        else:
-            FavoriteRepository.remove(user.user_id, story.story_id)
-        return createSuccessResponse({'created': repost is None})
+            repost = FavoriteRepository.getFavorite(user.user_id, story.story_id)
+            if repost is None:
+                FavoriteRepository.create(user.user_id, story.story_id)
+            else:
+                FavoriteRepository.remove(user.user_id, story.story_id)
+            return createSuccessResponse({'created': repost is None})
+        except UnAuthorizedException:
+            return createErrorResponse(UnAuthorizedException)
+        except StoryNotFoundException:
+            return createErrorResponse(StoryNotFoundException)
+        except Exception as exc:
+            return createErrorResponse(GException(exc))

@@ -11,6 +11,8 @@ import uuid
 from flask import jsonify
 from flask_jwt_extended import decode_token
 
+from app.utils.errors.EmailNotSentException import EmailNotSentException
+
 
 def getConnectionParameters(datasource):
     with open('../config/config.yaml', 'r') as f:
@@ -28,6 +30,36 @@ def getCountries():
     countries = json.load(open("../config/countries.json"))
     return countries
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+def send_html_email(email, subject, html_content):
+    try:
+        sender_email = 'dimaio.albe@gmail.com'
+        receiver_email = email
+
+        message = MIMEMultipart()
+        message['From'] = sender_email
+        message['To'] = receiver_email
+        message['Subject'] = subject
+
+        message.attach(MIMEText(html_content, 'html'))
+
+        smtp_server = 'smtp.gmail.com'
+        smtp_port = 587
+        smtp_username = 'dimaio.albe@gmail.com'
+        smtp_password = 'zhntipqqmkpuspne'
+
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+
+        server.login(smtp_username, smtp_password)
+        server.sendmail(sender_email, receiver_email, message.as_string())
+        server.quit()
+    except Exception:
+        raise EmailNotSentException()
+
 
 def getVariables(datasource):
     with open('../config/config.yaml', 'r') as f:
@@ -36,6 +68,12 @@ def getVariables(datasource):
             if ds['name'] == datasource:
                 return ds
 
+def getEmails(datasource):
+    with open('../config/config.yaml', 'r') as f:
+        data = yaml.load(f, Loader=yaml.FullLoader)
+        for ds in data['emails']:
+            if ds['name'] == datasource:
+                return ds
 
 def generatePinCode(size=6, chars=string.digits):
     return ''.join(random.choice(chars) for x in range(size))
