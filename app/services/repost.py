@@ -8,6 +8,7 @@ from app.model.repository.repo import Repository
 from app.model.repository.repost import RepostRepository
 from app.model.repository.story import StoryRepository
 from app.model.repository.user import UserRepository
+from app.model.repository.user_notification import UserNotificationRepository
 from app.utils.errors.GException import GException
 from app.utils.errors.StoryNotFoundException import StoryNotFoundException
 from app.utils.errors.UnAuthotizedException import UnAuthorizedException
@@ -32,6 +33,7 @@ class RepostService(Repository):
             repost = RepostRepository.getRepost(user.user_id, story.story_id)
             if repost is None:
                 RepostRepository.create(user.user_id, story.story_id)
+                UserNotificationRepository.create(story.user_id, user.user_id, 1)
             else:
                 RepostRepository.remove(user.user_id, story.story_id)
             return createSuccessResponse({'created': repost is None})

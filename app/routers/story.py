@@ -28,6 +28,13 @@ def getFavoriteStories(userId):
     return StoryService.getFavoriteStories(userId, get_jwt_identity())
 
 
+@storyRouter.get("/friends")
+@cross_origin()
+@jwt_required()
+def getFriendStory():
+    return StoryService.getFriendStory(get_jwt_identity())
+
+
 @storyRouter.get("/")
 @cross_origin()
 @jwt_required()

@@ -40,6 +40,26 @@ class StoryRepository(Repository):
         return story
 
     @classmethod
+    def getFriendStory(cls, userId):
+        story = sql.session.query(Story, User, text("reposts"), text("favorites")).from_statement(
+            text("SELECT stories.*, users.*,"
+                 "    (SELECT COUNT(*) "
+                 "     FROM reposts "
+                 "     WHERE story_id = stories.story_id) AS reposts, "
+                 "    (SELECT COUNT(*) "
+                 "     FROM favorites "
+                 "     WHERE story_id = stories.story_id) AS favorites "
+                 "FROM stories "
+                 "JOIN users "
+                 "ON users.user_id = stories.user_id "
+                 "JOIN friends "
+                 "ON friends.friend_id = stories.user_id "
+                 "WHERE friends.user_id = :userId "
+                 "ORDER BY RAND()").params(userId=userId)
+        ).first()
+        return story
+
+    @classmethod
     def getStories(cls, userId):
         query = (
             sql.session.query(

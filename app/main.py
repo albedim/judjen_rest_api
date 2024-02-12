@@ -2,11 +2,12 @@ from flask import jsonify
 from flask_cors import CORS
 
 from app.configuration.config import sql, app
-from app.routers import repost, favorite, storytag, friendrequest, tag, user, friend, story
+from app.routers import user_notification, repost, favorite, storytag, friendrequest, tag, user, friend, story
 from app.utils.utils import BASE_URL
 
 
 app.register_blueprint(repost.repostRouter)
+app.register_blueprint(user_notification.userNotificationRouter)
 app.register_blueprint(favorite.favoriteRouter)
 app.register_blueprint(friend.friendRouter)
 app.register_blueprint(friendrequest.friendrequestRouter)

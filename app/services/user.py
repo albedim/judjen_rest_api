@@ -6,6 +6,9 @@ import jwt
 
 from flask import send_file
 from flask_jwt_extended import create_access_token
+
+from app.model.repository.friend import FriendRepository
+from app.model.repository.friendrequest import FriendRequestRepository
 from app.model.repository.user import UserRepository
 from app.utils.errors.EmailNotSentException import EmailNotSentException
 from app.utils.errors.FileNotFoundEcxeption import FileNotFoundException
@@ -33,7 +36,22 @@ class UserService:
             user = UserRepository.getUserById(userId)
             if user is None:
                 raise UserNotFoundException()
-            return createSuccessResponse(user.toJSON(own=authUser.user_id == user.user_id))
+
+            isFriend = FriendRepository.get(user.user_id, authUser.user_id) is not None
+            isFriendRequestOpen = (
+                    FriendRequestRepository.get(user.user_id, authUser.user_id) is not None or
+                    FriendRequestRepository.get(authUser.user_id, user.user_id) is not None
+            )
+
+            return createSuccessResponse(
+                    user.toJSON(
+                        friend={
+                            "friendable": not isFriend and not isFriendRequestOpen,
+                            "is_request_pending": isFriendRequestOpen
+                        },
+                        own=authUser.user_id == user.user_id
+                    )
+            )
         except UserNotFoundException:
             return createErrorResponse(UserNotFoundException)
         except Exception as exc:

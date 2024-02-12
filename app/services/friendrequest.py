@@ -2,6 +2,7 @@ from app.model.repository.friend import FriendRepository
 from app.model.repository.repo import Repository
 from app.model.repository.friendrequest import FriendRequestRepository
 from app.model.repository.user import UserRepository
+from app.model.repository.user_notification import UserNotificationRepository
 from app.utils.errors.FriendRequestAlreadyExistsException import FriendRequestAlreadyExistsException
 from app.utils.errors.FriendRequestNotFoundException import FriendRequestNotFoundException
 from app.utils.errors.GException import GException
@@ -27,6 +28,7 @@ class FriendRequestService(Repository):
                 raise FriendRequestAlreadyExistsException()
 
             friend = FriendRequestRepository.create(user.user_id, request['friend_id'])
+            UserNotificationRepository.create(request['friend_id'], user.user_id, 3)
             return createSuccessResponse("friend request created")
         except UnAuthorizedException:
             return createErrorResponse(UnAuthorizedException)

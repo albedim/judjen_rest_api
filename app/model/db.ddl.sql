@@ -11,6 +11,16 @@ CREATE TABLE IF NOT EXISTS users(
     created_on DATE NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS user_notifications(
+    notification_id INT PRIMARY KEY AUTO_INCREMENT,
+	user_id VARCHAR(4) NOT NULL,
+	target_id VARCHAR(4) NOT NULL,
+    notification_type INT NOT NULL,
+    created_on DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (target_id) REFERENCES users(user_id)
+);
+
 CREATE TABLE IF NOT EXISTS stories(
 	story_id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(64) NOT NULL,

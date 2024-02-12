@@ -53,6 +53,43 @@ class StoryService(Repository):
             return createErrorResponse(GException(exc))
 
     @classmethod
+    def getFriendStory(cls, auth):
+        try:
+            userId = auth['user_id']
+            user = UserRepository.getUserById(userId)
+
+            if user is None:
+                raise UnAuthorizedException()
+
+            story = StoryRepository.getFriendStory(userId)
+
+            if story is None:
+                raise StoryNotFoundException()
+
+            reposted = RepostRepository.getRepost(user.user_id, story[0].story_id) is not None
+            favorited = FavoriteRepository.getFavorite(user.user_id, story[0].story_id) is not None
+            res = []
+            topics = StoryTagRepository.getTags(story[0].story_id)
+            for topic in topics:
+                res.append(topic.toJSON())
+            return createSuccessResponse(
+                story[0].toJSON(
+                    topics=res,
+                    reposted=reposted,
+                    favorited=favorited,
+                    user=story[1].toJSON(),
+                    reposts=story[2],
+                    favorites=story[3]
+                )
+            )
+        except UnAuthorizedException:
+            return createErrorResponse(UnAuthorizedException)
+        except StoryNotFoundException:
+            return createErrorResponse(StoryNotFoundException)
+        except Exception as exc:
+            return createErrorResponse(GException(exc))
+
+    @classmethod
     def createStory(cls, auth, request):
         try:
             userId = auth['user_id']
