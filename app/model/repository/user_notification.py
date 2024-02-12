@@ -11,8 +11,8 @@ from app.model.repository.repo import Repository
 class UserNotificationRepository(Repository):
 
     @classmethod
-    def create(cls, user_id, targetId, notificationTyoe):
-        notification = UserNotification(user_id, targetId, notificationTyoe)
+    def create(cls, user_id, targetId, notificationType):
+        notification = UserNotification(user_id, targetId, notificationType)
         sql.session.add(notification)
         sql.session.commit()
         return notification

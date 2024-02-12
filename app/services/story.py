@@ -6,6 +6,7 @@ from app.model.repository.repo import Repository
 from app.model.repository.storytag import StoryTagRepository
 from app.model.repository.tag import TagRepository
 from app.model.repository.user import UserRepository
+from app.model.repository.user_notification import UserNotificationRepository
 from app.services.repost import RepostService
 from app.utils.errors.GException import GException
 from app.utils.errors.StoryNotFoundException import StoryNotFoundException
@@ -72,6 +73,7 @@ class StoryService(Repository):
             topics = StoryTagRepository.getTags(story[0].story_id)
             for topic in topics:
                 res.append(topic.toJSON())
+
             return createSuccessResponse(
                 story[0].toJSON(
                     topics=res,
@@ -103,6 +105,10 @@ class StoryService(Repository):
                 queryTopic = TagRepository.getTag(topic['tag_id'])
                 if queryTopic is not None:
                     StoryTagRepository.create(story.story_id, topic['tag_id'])
+
+            friends = UserRepository.getFriends(userId)
+            for friend in friends:
+                UserNotificationRepository.create(friend[0].user_id, userId, 4)
 
             return createSuccessResponse("crated")
         except UnAuthorizedException:
