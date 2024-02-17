@@ -33,7 +33,8 @@ class FavoriteService(Repository):
             repost = FavoriteRepository.getFavorite(user.user_id, story.story_id)
             if repost is None:
                 FavoriteRepository.create(user.user_id, story.story_id)
-                UserNotificationRepository.create(story.user_id, user.user_id, 2)
+                if user.user_id != story.user_id:
+                    UserNotificationRepository.create(story.user_id, user.user_id, 2)
             else:
                 FavoriteRepository.remove(user.user_id, story.story_id)
             return createSuccessResponse({'created': repost is None})

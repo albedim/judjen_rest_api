@@ -57,6 +57,7 @@ class FriendRequestService(Repository):
             friend = FriendRepository.create(friendRequest.user_id, friendRequest.target_id)
             friend = FriendRepository.create(friendRequest.target_id, friendRequest.user_id)
             FriendRequestRepository.remove(friendRequest.user_id, friendRequest.target_id)
+            UserNotificationRepository.create(user.user_id, target.user_id, 5)
             return createSuccessResponse("friend created")
         except UnAuthorizedException:
             return createErrorResponse(UnAuthorizedException)

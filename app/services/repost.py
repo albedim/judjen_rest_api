@@ -33,7 +33,8 @@ class RepostService(Repository):
             repost = RepostRepository.getRepost(user.user_id, story.story_id)
             if repost is None:
                 RepostRepository.create(user.user_id, story.story_id)
-                UserNotificationRepository.create(story.user_id, user.user_id, 1)
+                if user.user_id != story.user_id:
+                    UserNotificationRepository.create(story.user_id, user.user_id, 1)
             else:
                 RepostRepository.remove(user.user_id, story.story_id)
             return createSuccessResponse({'created': repost is None})

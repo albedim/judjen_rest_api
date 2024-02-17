@@ -16,7 +16,12 @@ allNotifications = [
     },
     {
         "type": 4,
-        "href": "/",
+        "href": "/?tab=friends",
         "content": "{anonymous_name} posted a new story"
+    },
+    {
+        "type": 5,
+        "href": "/friends",
+        "content": "{anonymous_name} accepted your friend request"
     }
 ]

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import func, text
+from sqlalchemy import func, text, desc
 
 from app.configuration.config import sql
 from app.model.entity.repost import Repost
@@ -19,7 +19,11 @@ class UserNotificationRepository(Repository):
 
     @classmethod
     def getNotifications(cls, user_id):
-        notifications = sql.session.query(UserNotification, User).join(User, User.user_id == UserNotification.target_id).filter(UserNotification.user_id == user_id).all()
+        notifications = (sql.session.query(UserNotification, User)
+                         .join(User, User.user_id == UserNotification.target_id)
+                         .filter(UserNotification.user_id == user_id)
+                         .order_by(desc(UserNotification.notification_id))
+                         .all())
         return notifications
 
     @classmethod

@@ -1,4 +1,4 @@
-from sqlalchemy import text
+from sqlalchemy import text, desc
 from sqlalchemy.orm import aliased
 
 from app.configuration.config import sql
@@ -37,21 +37,21 @@ class UserRepository(Repository):
     def getFriends(cls, userId):
         friends = sql.session.query(User, text("friends.created_on"))\
                    .join(Friend, Friend.friend_id == User.user_id)\
-                   .filter(Friend.user_id == userId).all()
+                   .filter(Friend.user_id == userId).order_by(desc(Friend.created_on)).all()
         return friends
 
     @classmethod
     def getSentFriendRequests(cls, userId):
         friendRequests = sql.session.query(User, text("friendrequests.created_on")) \
             .join(FriendRequest, FriendRequest.target_id == User.user_id) \
-            .filter(FriendRequest.user_id == userId).all()
+            .filter(FriendRequest.user_id == userId).order_by(desc(FriendRequest.created_on)).all()
         return friendRequests
 
     @classmethod
     def getReceivedFriendRequests(cls, userId):
         friendRequests = sql.session.query(User, text("friendrequests.created_on")) \
             .join(FriendRequest, FriendRequest.user_id == User.user_id) \
-            .filter(FriendRequest.target_id == userId).all()
+            .filter(FriendRequest.target_id == userId).order_by(desc(FriendRequest.created_on)).all()
         return friendRequests
 
     @classmethod
