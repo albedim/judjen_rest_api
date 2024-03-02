@@ -10,7 +10,7 @@ class Story(sql.Model):
     __tablename__ = "stories"
     story_id = sql.Column(sql.Integer, primary_key=True)
     title = sql.Column(sql.String(64), nullable=False)
-    content = sql.Column(sql.String(250), nullable=False)
+    content = sql.Column(sql.Text, nullable=False)
     created_on = sql.Column(sql.Date, nullable=False)
     user_id = sql.Column(sql.String(4), sql.ForeignKey('users.user_id'), nullable=False)
 

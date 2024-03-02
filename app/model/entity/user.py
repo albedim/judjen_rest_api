@@ -27,7 +27,7 @@ class User(sql.Model):
         obj = {
             'user_id': self.user_id,
             'email': self.email,
-            'bio': self.bio if self.bio is not None else "Hey, I'm an anonymous human being, maybe?",
+            'bio': self.bio if self.bio is not None else "Questo sono io in poche parole",
             'anonymous_name': self.anonymous_name,
             'created_on': str(self.created_on)
         }

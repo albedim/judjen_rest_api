@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS user_notifications(
 CREATE TABLE IF NOT EXISTS stories(
 	story_id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(64) NOT NULL,
-    content VARCHAR(250) NOT NULL,
+    content TEXT NOT NULL,
     created_on DATE NOT NULL,
   	user_id VARCHAR(4) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
