@@ -9,6 +9,8 @@ class User(sql.Model):
     __tablename__ = "users"
     user_id = sql.Column(sql.String(4), primary_key=True)
     email = sql.Column(sql.String(64), nullable=False)
+    available_stories = sql.Column(sql.Integer, nullable=False)
+    as_limit_date = sql.Column(sql.Date, nullable=True)
     bio = sql.Column(sql.String(80))
     recovery_token = sql.Column(sql.String(16), nullable=True)
     password = sql.Column(sql.String(64), nullable=False)
@@ -18,6 +20,7 @@ class User(sql.Model):
     def __init__(self, bio, anonymousName, email, password):
         self.user_id = generateUuid(size=4)
         self.email = email
+        self.available_stories = 10
         self.bio = bio
         self.password = password
         self.anonymous_name = anonymousName

@@ -7,19 +7,19 @@ datasources:
     port: 3306
     db: judjen
   - name: production
-    user: ""
-    password: ""
-    host: localhost
+    user: "judjen"
+    password: "aJudjenOnPythonAnywhere23!"
+    host: "judjen.mysql.pythonanywhere-services.com"
     port: 3306
-    db: judjen
+    db: "judjen$default"
 
 variables:
   - name: local
     BASE_URL: http://localhost:8000
     BASE_FE_URL: http://localhost:3000
   - name: production
-    BASE_URL: https://videomail.pythonanywhere.com
-    BASE_FE_URL: https://videomailfe.pages.dev
+    BASE_URL: https://judjen.pythonanywhere.com
+    BASE_FE_URL: https://judjen.pages.dev
 
 
 emails:
@@ -27,5 +27,6 @@ emails:
     title: "Welcome to JudJen"
   - name: recover_password
     title: "Recover your password"
+
 
 

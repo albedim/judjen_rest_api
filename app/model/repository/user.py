@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy import text, desc
 from sqlalchemy.orm import aliased
 
@@ -27,6 +29,26 @@ class UserRepository(Repository):
     def getUserById(cls, user_id):
         user = sql.session.query(User).filter(User.user_id == user_id).first()
         return user
+
+    @classmethod
+    def setStoryLimit(cls, user):
+        user.available_stories -= 1
+        sql.session.commit()
+        return user
+
+    @classmethod
+    def resetStoryLimit(cls, user):
+        user.available_stories += 10
+        user.as_limit_date = None
+        sql.session.commit()
+        return user
+
+    @classmethod
+    def setStoryLimitDate(cls, user):
+        user.as_limit_date = datetime.date.today() + datetime.timedelta(days=1)
+        sql.session.commit()
+        return user
+
 
     @classmethod
     def signin(cls, email, password):

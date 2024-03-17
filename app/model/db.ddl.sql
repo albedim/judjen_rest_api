@@ -4,6 +4,8 @@ USE judjen;
 CREATE TABLE IF NOT EXISTS users(
 	user_id VARCHAR(4) PRIMARY KEY,
     email VARCHAR(64) NOT NULL,
+    available_stories INTEGER NOT NULL,
+    as_limit_date DATE,
     bio VARCHAR(80),
     recovery_token VARCHAR(16),
     password VARCHAR(64) NOT NULL,

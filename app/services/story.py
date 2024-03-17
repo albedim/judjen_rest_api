@@ -1,3 +1,5 @@
+import datetime
+
 from app.configuration.config import sql
 from app.model.repository.favorite import FavoriteRepository
 from app.model.repository.repost import RepostRepository
@@ -36,8 +38,18 @@ class StoryService(Repository):
             topics = StoryTagRepository.getTags(story[0].story_id)
             for topic in topics:
                 res.append(topic.toJSON())
-            return createSuccessResponse(
-                story[0].toJSON(
+
+            if user.available_stories > 0:
+                user = UserRepository.setStoryLimit(user)
+            else:
+                if user.as_limit_date is None:
+                    user = UserRepository.setStoryLimitDate(user)
+                elif user.as_limit_date <= datetime.date.today():
+                    user = UserRepository.resetStoryLimit(user)
+
+            return createSuccessResponse({
+                'available_stories': user.available_stories,
+                'story': story[0].toJSON(
                     topics=res,
                     reposted=reposted,
                     favorited=favorited,
@@ -45,7 +57,7 @@ class StoryService(Repository):
                     reposts=story[2],
                     favorites=story[3]
                 )
-            )
+            })
         except UnAuthorizedException:
             return createErrorResponse(UnAuthorizedException)
         except StoryNotFoundException:
@@ -106,6 +118,10 @@ class StoryService(Repository):
                 if queryTopic is not None:
                     StoryTagRepository.create(story.story_id, topic['tag_id'])
 
+            # reset story limit
+            UserRepository.resetStoryLimit(user)
+
+            # send notifications
             friends = UserRepository.getFriends(userId)
             for friend in friends:
                 UserNotificationRepository.create(friend[0].user_id, userId, 4)
