@@ -5,3 +5,4 @@
 
 # Ignore config folder
 /config
+/env
