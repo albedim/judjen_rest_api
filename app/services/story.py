@@ -39,16 +39,7 @@ class StoryService(Repository):
             for topic in topics:
                 res.append(topic.toJSON())
 
-            if user.available_stories > 0:
-                user = UserRepository.setStoryLimit(user)
-            else:
-                if user.as_limit_date is None:
-                    user = UserRepository.setStoryLimitDate(user)
-                elif user.as_limit_date <= datetime.date.today():
-                    user = UserRepository.resetStoryLimit(user)
-
             return createSuccessResponse({
-                'available_stories': user.available_stories,
                 'story': story[0].toJSON(
                     topics=res,
                     reposted=reposted,
@@ -118,10 +109,6 @@ class StoryService(Repository):
                 if queryTopic is not None:
                     StoryTagRepository.create(story.story_id, topic['tag_id'])
 
-            # reset story limit
-            UserRepository.resetStoryLimit(user)
-
-            # send notifications
             friends = UserRepository.getFriends(userId)
             for friend in friends:
                 UserNotificationRepository.create(friend[0].user_id, userId, 4)
