@@ -36,7 +36,7 @@ from email.mime.text import MIMEText
 
 def send_html_email(email, subject, html_content):
     try:
-        sender_email = 'dimaio.albe@gmail.com'
+        sender_email = ''
         receiver_email = email
 
         message = MIMEMultipart()
@@ -48,8 +48,8 @@ def send_html_email(email, subject, html_content):
 
         smtp_server = 'smtp.gmail.com'
         smtp_port = 587
-        smtp_username = 'dimaio.albe@gmail.com'
-        smtp_password = 'zhntipqqmkpuspne'
+        smtp_username = ''
+        smtp_password = ''
 
         server = smtplib.SMTP(smtp_server, smtp_port)
         server.starttls()
